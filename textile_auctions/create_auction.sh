@@ -9,7 +9,7 @@ DATASET_NAME=$1
 NGINX_DIR="/data/carfiles/" # where to put the carfile for serving
 API_KEY=$2 # pass this in as second arg, might be convenient to have this as an env variable
 REP_FACTOR="5" # recommended replication factor is 5
-BROKER_URL="https://broker.staging.textile.dev/"
+BROKER_URL="https://broker.staging.textile.dev"
 SERVER_IP="167.71.215.71" # the IP of this NGINX server droplet, this might change later. We can have a subdomain pointing to this in the future.
 
 function download_dataset(){
@@ -25,9 +25,10 @@ function download_dataset(){
 	cd ../..
 }
 
-function check_availability(){
+function preprocess_for_auction(){
 	# assumes datalad get has been run already
-	cd datasets/$1
+	echo "checking missing files..."
+	cd "datasets/$1"
 	MISSING_SYMLINKS=$(find . -xtype l)
 
 	total=${#MISSING_SYMLINKS}
@@ -39,6 +40,9 @@ function check_availability(){
 		echo "Missing symlink #$count/$total: $f - removing"
 		datalad remove $f
 	done
+
+	cd ../..
+	echo "check finished"
 }
 
 function prepare_carfile(){
@@ -62,7 +66,7 @@ function move_carfile(){
 
 download_dataset $DATASET_NAME
 check_availability $DATASET_NAME
-prepare_carfile $DATASET_NAME
+preprocess_for_auction $DATASET_NAME
 move_carfile $DATASET_NAME $NGINX_DIR
 
 # extracting relevant info from json output using a python script (piece_cid, piece_size, etc.)
