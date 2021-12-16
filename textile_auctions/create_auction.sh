@@ -64,6 +64,14 @@ function move_carfile(){
 	cd ..
 }
 
+function dataset_size() {
+	cd datasets/
+	TMP=$(du -s $1) # dataset size in KB
+ 	SIZE=$(echo TMP | cut -f1 "-d ")
+	echo $SIZE # use $() to capture echo
+	cd ..
+}
+
 download_dataset $DATASET_NAME
 check_availability $DATASET_NAME
 preprocess_for_auction $DATASET_NAME
@@ -76,6 +84,9 @@ IFS=" "
 	read -a arr <<< "$PARSED"
 }
 
-./auction-data.sh $BROKER_URL $API_KEY http://${SERVER_IP}/carfiles/${DATASET_NAME}.car ${arr[0]} ${arr[1]} ${arr[2]} $REP_FACTOR
+AUCTION_OUTPUT=$(./auction-data.sh $BROKER_URL $API_KEY http://${SERVER_IP}/carfiles/${DATASET_NAME}.car ${arr[0]} ${arr[1]} ${arr[2]} $REP_FACTOR)
+echo AUCTION_OUTPUT
+
+python3 create_log_entry.py $DATASET_NAME $(dataset_size $DATASET_NAME) $REP_FACTOR
 
 echo "done..."
