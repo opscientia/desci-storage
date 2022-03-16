@@ -6,11 +6,9 @@ Meaning -> don"t re-deal for datasets already in filecoin.
 CON: Will probably be too much overhead / overengineering. Focus on MVP
 """
 
-# input format:
-
 import json, sys
 
-LOGFILE = "/data/logs/datalad_logs.json"
+LOGFILE = "/data/logs/datalad_logs.json" # default for now. Use .env variables ideally
 
 name, size_kb, num_replications, deal_id, piece_size, piece_cid, payload_cid = sys.argv[1:]
 
@@ -35,7 +33,7 @@ log_object = {
             "status": "Auctioning", # TODO
             "num_replications": num_replications, # replication factor
             "method": "Textile Broker",
-            "num_pieces": 1, # default 1 for datasets < 32GB, when we use chunking for larger data, this will change
+            "num_pieces": 1, # default 1 for datasets < 32GB, when we begin chunking for larger data, this will change
             "deal_info": [
                 {
                     "piece_index": 1, # for larger datasets, we'll have multiple pieces each <=32GB
@@ -52,9 +50,7 @@ log_object = {
             "IPFS_Metadata": {},
         }
     },
-
 #    dataset_hash: <some sort of hash digest of entire dataset - for verifiability,
-
 }
 
 json_data.append(log_object)
