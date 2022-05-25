@@ -3,7 +3,11 @@ import { getDataset } from '../utils/data'
 
 export default function Dataset() {
     let params = useParams()
+    // TODO: Create POST endpoint on mongo server for individual datasets
     let dataset = getDataset(params.datasetName)
+    // useEffect(() => {
+    //     fetch()
+    // }, [])
 
     return (
         <>

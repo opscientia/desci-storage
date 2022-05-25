@@ -13,6 +13,7 @@ function App() {
 
     const [status, setStatus] = useState(null)
 
+    // get status of dealmaking server, BUSY or IDLE
     useEffect(() => {
         fetch("http://localhost:3001/status")
         .then(res => res.json())
@@ -21,7 +22,7 @@ function App() {
             console.log("response data for /status ", data)
         })
     }, [])
-    // empty square brackets means no dependencies for this var, loads only once
+    // empty means no dependencies for this var, loads only once at page load
 
     return (
       <div style={{padding: "1rem"}}>
