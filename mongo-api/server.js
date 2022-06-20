@@ -21,7 +21,7 @@ let cachedClient = null;
 let cachedDb = null;
 
 // constants
-const COLLECTION = "datalad-datasets-test1";
+const COLLECTION = "datalad-datasets-main";
 
 async function connectToDatabase() {
     // use previous connection if cache available
@@ -122,14 +122,14 @@ app.get("/status", async (req, res) => {
 // get all dataset metadata
 app.get("/datasets", async (req, res) => {
     const db = await connectToDatabase();
-    const datasets = await db.collection("datalad-datasets-test1").find({}).toArray();
+    const datasets = await db.collection(COLLECTION).find({}).toArray();
     res.json({datasets});
 });
 
 // get single dataset
 app.put("/dataset", async (req, res) => {
     const db = await connectToDatabase();
-    const dataset = await db.collection("datalad-datasets-test1")
+    const dataset = await db.collection(COLLECTION)
                              .findOne(
                                  {"dataset_name_datalad": req.body.name}
                              );
