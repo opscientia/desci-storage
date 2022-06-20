@@ -47,25 +47,35 @@ function preprocess_for_auction(){
 	echo "check finished"
 }
 
-#download_dataset $1
+download_dataset $1
 
 # first pass for metadata - collect missing symlinks
-#python3 collect_metadata.py $DATASETS_DIR$1  $JSON_DIR $1
+python3 collect_metadata.py $DATASETS_DIR$1  $JSON_DIR $1
 
 # remove broken symlinks and non-useful files
-#preprocess_for_auction $1
+preprocess_for_auction $1
 
-#echo "Running packer on $1"
+echo "Running packer on $1"
 
-#python3 $PACKER_PATH --pack -s $DATASETS_DIR${1} -t $WORKSPACE_DIR -o $CARFILES_DIR -k $PACKER_KEY
+python3 $PACKER_PATH --pack -s $DATASETS_DIR${1} -t $WORKSPACE_DIR -o $CARFILES_DIR -k $PACKER_KEY
 
 echo "executing estuary request..."
 
-curl -X POST https://shuttle-4.estuary.tech/content/add-car -H "Authorization: Bearer $ESTUARY_API_KEY" -H "Accept: application/json" -T "${CARFILES_DIR}JOB0-CAR0.car"
+# TODO: using JOB0-CAR0.car as default for now. Detect number of carfiles and upload accordingly.
+curl -X POST https://shuttle-4.estuary.tech/content/add-car -H "Authorization: Bearer $ESTUARY_API_KEY" -H "Accept: application/json" -T "${CARFILES_DIR}JOB0-CAR0.car" > ${JSON_DIR}${1}_request.json
 
-# echo "\n\nDone with request"
+echo "\n\nDone with request"
+echo "parsing output json into metadata json"
 
-#echo "Cleaning up..."
+python3 parse_estuary_json.py ${JSON_DIR}${1}_request.json ${JSON_DIR}${1}.json
+echo "Parsed metadata file. Updated JSON:"
+cat ${JSON_DIR}${1}.json
+
+# TODO: POST request to mongo API with metadata json
+python3 update_metadata_on_db.py ${JSON_DIR}${1}.json
+
+echo "Cleaning up..."
 #rm -rf $DATASETS_DIR/$1
 #rm -rf $WORKSPACE_DIR/*
-#rm -rf $CARFILES_DIR/*
+echo "Deleting carfiles..."
+rm -rf $CARFILES_DIR/*

@@ -9,14 +9,20 @@ if len(sys.argv) < 3:
 with open(sys.argv[1], mode="r") as f:
     estuary_dict = json.loads(f.read())
 
-print(f"CID: {estuary_dict['cid']} | Estuary ID: {estuary_dict['estuaryId']}")
+if "cid" not in estuary_dict.keys():
+    print("Estuary request failed, curl output dict:")
+    print(estuary_dict)
+    sys.exit(1)
+else:
+    print(f"CID: {estuary_dict['cid']} | Estuary ID: {estuary_dict['estuaryId']}")
 
 # 2: add estuary deal information and CID(s) to pre-filled metadata json
 with open(sys.argv[2], mode='r') as f:
     metadata_dict = json.loads(f.read())
 
 metadata_dict['CID'] = estuary_dict['cid']
-metadata_dict['estuaryId'] = estuary_dict['estuaryId']
+metadata_dict['estuary_dealid'] = estuary_dict['estuaryId']
+metadata_dict['archived'] = True
 
 # 3: modify existing metadata file with updated info
 with open(sys.argv[2], mode='w') as f:

@@ -20,6 +20,9 @@ app.use(cors());
 let cachedClient = null;
 let cachedDb = null;
 
+// constants
+const COLLECTION = "datalad-datasets-test1";
+
 async function connectToDatabase() {
     // use previous connection if cache available
     if (cachedDb) return cachedDb;
@@ -143,8 +146,6 @@ app.post("/initialize", async (req, res) => {
     // const text = req.body.text;
     console.log(req.body);
 
-    const COLLECTION = "datalad-datasets-test1"
-
     const entry_exists = await db.collection(COLLECTION).countDocuments(
         {"dataset_name_datalad": req.body.name},
         limit=1
@@ -186,7 +187,42 @@ app.post("/initialize", async (req, res) => {
     }
 });
 
+app.post("/update_metadata_estuary", async (req, res) => {
+	const dataset_name = req.body.name;
+	const db = await connectToDatabase();
 
+	console.dir(req.body);
+	const query = {"dataset_name_datalad": req.body.name};
+	if(!req.body.archived) {
+		console.log("Not archived, not updating");
+		res.send({
+			"error": true,
+			"error_message": "archived:false recieved ; not updating metadata"
+		});
+
+		return;
+	}
+
+	const new_values = {$set: {
+		"estuary_dealid": req.body.estuary_dealid,
+		"CID": req.body.CID,
+		"num_pieces": req.body.numPieces,
+		"missing_files": req.body.missing_files,
+		"archived": true
+	}};
+
+	db.collection(COLLECTION).updateOne(query, new_values, (err, res_mongo) => {
+		if (err) {
+			res.send({
+				"error": true,
+				"error_message": err
+			});
+		}
+		else {
+			res.send({"error": false});
+		}
+	});
+});
 
 //////////////////////////////////////////////////
 // create server
