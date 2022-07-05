@@ -2,6 +2,7 @@ import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react"
 import Link from '@mui/material/Link'
 import Paper from '@mui/material/Paper'
+import JSONPretty from 'react-json-pretty'
 
 export default function Dataset() {
     let params = useParams()
@@ -39,18 +40,18 @@ export default function Dataset() {
 
                         {dataset.archived &&
                             <>
-                                <p>Description: {dataset.description}</p>
-                                <p>CID: {dataset.CID}</p>
-				<p>ipfs.io gateway: <Link href={cidUrl}>{cidUrl}</Link></p>
+                                <p>
+					Description: 
+					<JSONPretty data={dataset.description} />
+				</p>
+                                <p>CID: <i>{dataset.CID}</i></p>
 				<p>dweb.link gateway: <Link href={alternateUrl}>{alternateUrl}</Link></p>
                                 
-				<p>Estuary Deal ID: {dataset.estuary_dealid}</p>
+				<p>Estuary Deal ID: <i>{dataset.estuary_dealid}</i></p>
 				<p>Size: {dataset.size}</p>
                                 
 				<h4>Missing Filepaths:</h4>
-				{dataset.missing_files.map(filepath => {
-				    return (<p>{filepath}</p>)
-				})}
+				<JSONPretty data={dataset.missing_files} />
 
 			    </>
                         }

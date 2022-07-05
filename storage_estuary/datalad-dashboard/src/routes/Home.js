@@ -31,10 +31,9 @@ export default function Home() {
             <TableHead>
               <TableRow>
                 <TableCell>Name</TableCell>
-                <TableCell align="right">Added?</TableCell>
+                <TableCell align="right">Archived</TableCell>
                 <TableCell align="right">CID</TableCell>
                 <TableCell align="right">Size</TableCell>
-                <TableCell align="right">Description</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -47,7 +46,6 @@ export default function Home() {
                   <TableCell align="right">{row.archived ? 'yes' : 'no'}</TableCell>
                   <TableCell align="right">{row.CID}</TableCell>
                   <TableCell align="right">{row.dataset_size}</TableCell>
-                  <TableCell align="right">{row.description}</TableCell>
                 </TableRow>
               ))}
             </TableBody>

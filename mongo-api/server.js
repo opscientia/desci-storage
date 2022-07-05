@@ -208,7 +208,8 @@ app.post("/update_metadata_estuary", async (req, res) => {
 		"CID": req.body.CID,
 		"num_pieces": req.body.numPieces,
 		"missing_files": req.body.missing_files,
-		"archived": true
+		"archived": true,
+		"description": req.body.description
 	}};
 
 	db.collection(COLLECTION).updateOne(query, new_values, (err, res_mongo) => {
