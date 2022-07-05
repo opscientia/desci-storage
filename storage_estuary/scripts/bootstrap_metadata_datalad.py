@@ -3,7 +3,7 @@
 # 1: get list of datasets
 import os
 print("running datalad install")
-# os.system("datalad install ///")
+os.system("datalad install ///")
 print("done")
 with os.popen("ls 'datasets.datalad.org'") as f:
     datasets = f.readlines()

@@ -15,7 +15,7 @@ function App() {
 
     // get status of dealmaking server, BUSY or IDLE
     useEffect(() => {
-        fetch("http://localhost:3001/status")
+        fetch("http://142.93.66.228:3001/status")
         .then(res => res.json())
         .then(data => {
             setStatus(data.status)

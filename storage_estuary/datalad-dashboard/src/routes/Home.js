@@ -12,7 +12,7 @@ import { getDatasets } from '../utils/data'
 
 export default function Home() {
     // let rows = getDatasets()
-    const db_url = "http://localhost:3001/datasets"
+    const db_url = "http://142.93.66.228:3001/datasets"
 
     const [rows, setRows] = useState([]);
 
