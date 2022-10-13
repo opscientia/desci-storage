@@ -209,7 +209,8 @@ app.post("/update_metadata_estuary", async (req, res) => {
 		"num_pieces": req.body.numPieces,
 		"missing_files": req.body.missing_files,
 		"archived": true,
-		"description": req.body.description
+		"description": req.body.description,
+        "subdataset_info_dict": req.body.subdataset_info_dict
 	}};
 
 	db.collection(COLLECTION).updateOne(query, new_values, (err, res_mongo) => {
@@ -225,6 +226,11 @@ app.post("/update_metadata_estuary", async (req, res) => {
 	});
 });
 
+app.post("/add_new_field", async (req, res) => {
+    const db = await connectToDatabase();
+    db.collection(COLLECTION).update({}, {$set: {"subdataset_info_dict": []}}, false, true);
+    res.send({"error": false});
+});
 //////////////////////////////////////////////////
 // create server
 app.listen(port, () => {

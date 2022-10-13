@@ -25,15 +25,15 @@ export default function Home() {
         })
     }, [])
 
+
     return (
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
               <TableRow>
                 <TableCell>Name</TableCell>
-                <TableCell align="right">Archived</TableCell>
-                <TableCell align="right">CID</TableCell>
-                <TableCell align="right">Size</TableCell>
+                <TableCell align="left">Archived</TableCell>
+                <TableCell align="left">CID</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -43,9 +43,8 @@ export default function Home() {
 
                     <Link to={`/datasets/${row.dataset_name_datalad}`}>{row.dataset_name_datalad}</Link>
                   </TableCell>
-                  <TableCell align="right">{row.archived ? 'yes' : 'no'}</TableCell>
-                  <TableCell align="right">{row.CID}</TableCell>
-                  <TableCell align="right">{row.dataset_size}</TableCell>
+                  <TableCell align="left">{row.archived ? 'yes' : 'no'}</TableCell>
+                  <TableCell align="left">{(Object.keys(row.subdataset_info_dict).length == 0) ? row.CID : `multiple chunks (${Object.keys(row.subdataset_info_dict).length})`}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
